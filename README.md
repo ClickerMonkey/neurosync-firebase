@@ -1,5 +1,5 @@
-# neurosync-firebase
+# rekord-firebase
 
-A neurosync binding to firebase - implementing Neuro.rest & Neuro.live.
+A rekord binding to firebase - implementing Rekord.rest & Rekord.live.
 
-The easiest way to install is by using bower via `bower install neurosync-firebase`.
+The easiest way to install is by using bower via `bower install rekord-firebase`.

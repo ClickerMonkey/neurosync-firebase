@@ -3,21 +3,21 @@
 
   var cache = {};
 
-  var Neuro_live = Neuro.live;
-  var Neuro_rest = Neuro.rest;
+  var Rekord_live = Rekord.live;
+  var Rekord_rest = Rekord.rest;
 
-  Neuro.firebase = function(url)
+  Rekord.firebase = function(url)
   {
     return url in cache ? cache[ url ] : cache[ url ] = new Firebase( url );
   };
 
-  if ( !Neuro.liveSet )
+  if ( !Rekord.liveSet )
   {
-    Neuro.live = function(database)
+    Rekord.live = function(database)
     {
       if ( !database.api )
       {
-        return Neuro_live.call( this, database );
+        return Rekord_live.call( this, database );
       }
 
       var fire = database.api;
@@ -44,21 +44,21 @@
     
       return {
         firebase: fire,
-        save: Neuro.noop,
-        remove: Neuro.noop
+        save: Rekord.noop,
+        remove: Rekord.noop
       };
     };
 
-    Neuro.liveSet = true;
+    Rekord.liveSet = true;
   }
 
-  if ( !Neuro.restSet )
+  if ( !Rekord.restSet )
   {
-    Neuro.rest = function(database)
+    Rekord.rest = function(database)
     {
       if ( !database.api )
       {
-        return Neuro_rest.call( this, database );
+        return Rekord_rest.call( this, database );
       }
 
       var fire = database.api;
@@ -95,7 +95,7 @@
 
         all: function( success, failure )
         {
-          if ( Neuro.forceOffline )
+          if ( Rekord.forceOffline )
           {
             return failure( [], 0 );
           }
@@ -109,7 +109,7 @@
             {
               var model = data[ key ];
 
-              if ( Neuro.isObject( model ) )
+              if ( Rekord.isObject( model ) )
               {
                 models.push( model );
               }
@@ -128,7 +128,7 @@
 
         get: function( model, success, failure )
         {
-          if ( Neuro.forceOffline )
+          if ( Rekord.forceOffline )
           {
             return failure( {}, 0 );
           }
@@ -150,7 +150,7 @@
 
         create: function( model, encoded, success, failure )
         {
-          if ( Neuro.forceOffline )
+          if ( Rekord.forceOffline )
           {
             return failure( {}, 0 );
           }
@@ -162,7 +162,7 @@
 
         update: function( model, encoded, success, failure )
         {
-          if ( Neuro.forceOffline )
+          if ( Rekord.forceOffline )
           {
             return failure( {}, 0 );
           }
@@ -174,7 +174,7 @@
 
         remove: function( model, success, failure )
         {
-          if ( Neuro.forceOffline )
+          if ( Rekord.forceOffline )
           {
             return failure( {}, 0 );
           }
@@ -191,7 +191,7 @@
 
     };
 
-    Neuro.restSet = true;
+    Rekord.restSet = true;
   }
 
 })( Firebase, this );

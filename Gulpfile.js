@@ -7,11 +7,11 @@ var gutil = require('gulp-util');
 var shell = require('gulp-shell');
 
 var build = {
-  filename: 'neurosync-firebase.js',
-  minified: 'neurosync-firebase.min.js',
+  filename: 'rekord-firebase.js',
+  minified: 'rekord-firebase.min.js',
   output: './build/',
   include: [
-    './src/neurosync-firebase.js'
+    './src/rekord-firebase.js'
   ]
 };
 

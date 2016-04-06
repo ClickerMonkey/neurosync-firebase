@@ -1,12 +1,12 @@
 {
-  "name": "neurosync-firebase",
+  "name": "rekord-firebase",
   "version": "1.0.0",
-  "description": "A neurosync binding to firebase - implementing Neuro.rest & Neuro.live",
+  "description": "A rekord binding to firebase - implementing Rekord.rest & Rekord.live",
   "author": "Philip Diffenderfer",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ClickerMonkey/neurosync-firebase.git"
+    "url": "git://github.com/Rekord/rekord-firebase.git"
   },
   "devDependencies": {
     "gulp": "^3.8.10",
