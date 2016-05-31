@@ -1,16 +1,19 @@
-(function(Firebase, global, undefined)
+(function(global, Rekord, Firebase, undefined)
 {
+  var isObject = Rekord.isObject;
+  var noop = Rekord.noop;
+
   var cache = {};
 
   var Rekord_live = Rekord.live;
   var Rekord_rest = Rekord.rest;
 
-  Rekord.firebase = function(url)
+  function firebase(url)
   {
     return url in cache ? cache[ url ] : cache[ url ] = new Firebase( url );
-  };
+  }
 
-  Rekord.setLive(function(database)
+  function LiveFactory(database)
   {
     if ( !database.api )
     {
@@ -41,12 +44,12 @@
 
     return {
       firebase: fire,
-      save: Rekord.noop,
-      remove: Rekord.noop
+      save: noop,
+      remove: noop
     };
-  });
+  }
 
-  Rekord.setRest(function(database)
+  function RestFactory(database)
   {
     if ( !database.api )
     {
@@ -101,7 +104,7 @@
           {
             var model = data[ key ];
 
-            if ( Rekord.isObject( model ) )
+            if ( isObject( model ) )
             {
               models.push( model );
             }
@@ -137,7 +140,7 @@
           failure( {}, error.code );
         }
 
-        file.child( model.$key() ).once( 'value', onGet, onGetError );
+        fire.child( model.$key() ).once( 'value', onGet, onGetError );
       },
 
       create: function( model, encoded, success, failure )
@@ -180,7 +183,10 @@
       }
 
     };
+  }
 
-  });
+  Rekord.firebase = firebase;
+  Rekord.setLive( LiveFactory );
+  Rekord.setRest( RestFactory );
 
-})( Firebase, this );
+})( this, this.Rekord, this.Firebase );

@@ -1,6 +1,6 @@
 {
   "name": "rekord-firebase",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/Rekord/rekord-firebase",
   "authors": [
     "Philip Diffenderfer <pdiffenderfer@gmail.com>"
@@ -24,6 +24,7 @@
     "tests"
   ],
   "dependencies": {
-    "firebase": "~2.3.2"
+    "firebase": "~2.3.2",
+    "rekord": "^1.2.0"
   }
 }
