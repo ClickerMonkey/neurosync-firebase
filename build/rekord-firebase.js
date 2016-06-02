@@ -1,17 +1,11 @@
 (function(global, Rekord, Firebase, undefined)
 {
   var isObject = Rekord.isObject;
+  var isFunction = Rekord.isFunction;
   var noop = Rekord.noop;
-
-  var cache = {};
 
   var Rekord_live = Rekord.live;
   var Rekord_rest = Rekord.rest;
-
-  function firebase(url)
-  {
-    return url in cache ? cache[ url ] : cache[ url ] = new Firebase( url );
-  }
 
   function LiveFactory(database)
   {
@@ -25,7 +19,7 @@
     function handleSave(snapshot)
     {
       var data = snapshot.val();
-      var key = snapshot.key();
+      var key = isFunction( snapshot.key ) ? snapshot.key() : snapshot.key;
 
       database.liveSave( key, data );
     }
@@ -33,7 +27,7 @@
     function handleRemove(snapshot)
     {
       var data = snapshot.val();
-      var key = snapshot.key();
+      var key = isFunction( snapshot.key ) ? snapshot.key() : snapshot.key;
 
       database.liveRemove( key );
     }
@@ -185,7 +179,6 @@
     };
   }
 
-  Rekord.firebase = firebase;
   Rekord.setLive( LiveFactory );
   Rekord.setRest( RestFactory );
 

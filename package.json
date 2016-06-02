@@ -1,6 +1,6 @@
 {
   "name": "rekord-firebase",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A rekord binding to firebase - implementing Rekord.rest & Rekord.live",
   "author": "Philip Diffenderfer",
   "license": "MIT",
