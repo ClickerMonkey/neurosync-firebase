@@ -9,3 +9,6 @@
 A rekord binding to firebase - implementing Rekord.rest & Rekord.live.
 
 The easiest way to install is by using bower via `bower install rekord-firebase`.
+
+- `rekord-firebase.js` is `3.6KB` (`0.8KB` gzipped)
+- `rekord-firebase.min.js` is `1.3KB` (`0.5KB` gzipped)
