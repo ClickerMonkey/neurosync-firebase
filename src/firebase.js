@@ -7,27 +7,31 @@
   var Rekord_live = Rekord.live;
   var Rekord_rest = Rekord.rest;
 
+  function getKey(snapshot)
+  {
+    return isFunction( snapshot.key ) ? snapshot.key() : snapshot.key;
+  }
+
   function LiveFactory(database)
   {
-    if ( !database.api )
+    var fire = database.getLiveFirebase ? database.getLiveFirebase( database ) : database.api;
+
+    if ( !fire )
     {
       return Rekord_live.call( this, database );
     }
 
-    var fire = database.api;
-
     function handleSave(snapshot)
     {
       var data = snapshot.val();
-      var key = isFunction( snapshot.key ) ? snapshot.key() : snapshot.key;
+      var key = getKey( snapshot );
 
       database.liveSave( key, data );
     }
 
     function handleRemove(snapshot)
     {
-      var data = snapshot.val();
-      var key = isFunction( snapshot.key ) ? snapshot.key() : snapshot.key;
+      var key = getKey( snapshot );
 
       database.liveRemove( key );
     }
@@ -45,12 +49,15 @@
 
   function RestFactory(database)
   {
-    if ( !database.api )
+    if ( !database.api && !database.getFirebase )
     {
       return Rekord_rest.call( this, database );
     }
 
-    var fire = database.api;
+    function getFirebase(model)
+    {
+      return database.getFirebase ? database.getFirebase( model, database ) : database.api;
+    }
 
     function createCallback(success, failure)
     {
@@ -80,7 +87,7 @@
 
     return {
 
-      firebase: fire,
+      getFirebase: getFirebase,
 
       all: function( success, failure )
       {
@@ -112,7 +119,7 @@
           failure( [], error.code );
         }
 
-        fire.once( 'value', onAll, onAllError );
+        getFirebase().once( 'value', onAll, onAllError );
       },
 
       get: function( model, success, failure )
@@ -134,7 +141,10 @@
           failure( {}, error.code );
         }
 
-        fire.child( model.$key() ).once( 'value', onGet, onGetError );
+        getFirebase( model )
+          .child( model.$key() )
+          .once( 'value', onGet, onGetError )
+        ;
       },
 
       create: function( model, encoded, success, failure )
@@ -146,7 +156,10 @@
 
         clearUndefined( encoded );
 
-        fire.child( model.$key() ).set( encoded, createCallback( success, failure ) );
+        getFirebase( model )
+          .child( model.$key() )
+          .set( encoded, createCallback( success, failure ) )
+        ;
       },
 
       update: function( model, encoded, success, failure )
@@ -158,7 +171,10 @@
 
         clearUndefined( encoded );
 
-        fire.child( model.$key() ).update( encoded, createCallback( success, failure ) );
+        getFirebase( model )
+          .child( model.$key() )
+          .update( encoded, createCallback( success, failure ) )
+        ;
       },
 
       remove: function( model, success, failure )
@@ -168,7 +184,10 @@
           return failure( {}, 0 );
         }
 
-        fire.child( model.$key() ).remove( createCallback( success, failure ) );
+        getFirebase( model )
+          .child( model.$key() )
+          .remove( createCallback( success, failure ) )
+        ;
       },
 
       query: function( url, query, success, failure )
@@ -181,5 +200,10 @@
 
   Rekord.setLive( LiveFactory );
   Rekord.setRest( RestFactory );
+
+  Rekord.Firebase = {
+    live: LiveFactory,
+    rest: RestFactory
+  };
 
 })( this, this.Rekord, this.Firebase );
