@@ -1,7 +1,9 @@
-(function(global, Rekord, Firebase, undefined)
+(function(global, Rekord, firebase, undefined)
 {
   var isObject = Rekord.isObject;
   var isFunction = Rekord.isFunction;
+  var isArray = Rekord.isArray;
+  var isString = Rekord.isString;
   var noop = Rekord.noop;
 
   var Rekord_live = Rekord.live;
@@ -59,18 +61,54 @@
       return database.getFirebase ? database.getFirebase( model, database ) : database.api;
     }
 
-    function createCallback(success, failure)
+    function getQueryFirebase(url)
     {
-      return function onOperation(error)
+      return database.getQueryFirebase ? database.getQueryFirebase( url ) :
+        ( isString( url ) ? firebase.database().ref( url ) : getFirebase() );
+    }
+
+    function createOperationCallbackSuccess(success)
+    {
+      return function()
       {
-        if ( error )
+        success( {} );
+      };
+    }
+
+    function createOperationCallbackFailure(failure)
+    {
+      return function(error)
+      {
+        failure( {}, error.code );
+      };
+    }
+
+    function createQueryCallbackSuccess(success)
+    {
+      return function(snapshot)
+      {
+        var data = snapshot.val();
+        var models = [];
+
+        for (var key in data)
         {
-          failure( {}, error );
+          var model = data[ key ];
+
+          if ( isObject( model ) )
+          {
+            models.push( model );
+          }
         }
-        else
-        {
-          success( {} );
-        }
+
+        success( models );
+      };
+    }
+
+    function createQueryCallbackFailure(failure)
+    {
+      return function(error)
+      {
+        failure( [], error.code );
       };
     }
 
@@ -88,6 +126,7 @@
     return {
 
       getFirebase: getFirebase,
+      getQueryFirebase: getQueryFirebase,
 
       all: function( success, failure )
       {
@@ -96,30 +135,11 @@
           return failure( [], 0 );
         }
 
-        function onAll(snapshot)
-        {
-          var data = snapshot.val();
-          var models = [];
-
-          for (var key in data)
-          {
-            var model = data[ key ];
-
-            if ( isObject( model ) )
-            {
-              models.push( model );
-            }
-          }
-
-          success( models );
-        }
-
-        function onAllError(error)
-        {
-          failure( [], error.code );
-        }
-
-        getFirebase().once( 'value', onAll, onAllError );
+        getFirebase()
+          .once( 'value' )
+          .then( createQueryCallbackSuccess( success ) )
+          .catch( createQueryCallbackFailure( failure ) )
+        ;
       },
 
       get: function( model, success, failure )
@@ -136,14 +156,11 @@
           success( data );
         }
 
-        function onGetError(error)
-        {
-          failure( {}, error.code );
-        }
-
         getFirebase( model )
           .child( model.$key() )
-          .once( 'value', onGet, onGetError )
+          .once( 'value' )
+          .then( onGet )
+          .catch( createOperationCallbackFailure( failure ) )
         ;
       },
 
@@ -158,7 +175,9 @@
 
         getFirebase( model )
           .child( model.$key() )
-          .set( encoded, createCallback( success, failure ) )
+          .set( encoded )
+          .then( createOperationCallbackSuccess( success ) )
+          .catch( createOperationCallbackFailure( failure ) )
         ;
       },
 
@@ -173,7 +192,9 @@
 
         getFirebase( model )
           .child( model.$key() )
-          .update( encoded, createCallback( success, failure ) )
+          .update( encoded )
+          .then( createOperationCallbackSuccess( success ) )
+          .catch( createOperationCallbackFailure( failure ) )
         ;
       },
 
@@ -186,13 +207,50 @@
 
         getFirebase( model )
           .child( model.$key() )
-          .remove( createCallback( success, failure ) )
+          .remove()
+          .then( createOperationCallbackSuccess( success ) )
+          .catch( createOperationCallbackFailure( failure ) )
         ;
       },
 
-      query: function( url, query, success, failure )
+      query: function( url, data, success, failure )
       {
-        success( [] );
+        if ( Rekord.forceOffline )
+        {
+          return failure( [], 0 );
+        }
+
+        var query = getQueryFirebase( url );
+
+        if ( isObject( data ) )
+        {
+          for (var method in data)
+          {
+            var args = data[ method ];
+
+            if ( isArray( args ) )
+            {
+              for (var i = 0; i < args.length; i++)
+              {
+                query[ method ]( args[ i ] );
+              }
+            }
+            else
+            {
+              query[ method ]( args );
+            }
+          }
+        }
+        else if ( isFunction( data ) )
+        {
+          data( query );
+        }
+
+        query
+          .once( 'value' )
+          .then( createQueryCallbackSuccess( success ) )
+          .catch( createQueryCallbackFailure( failure ) )
+        ;
       }
 
     };
@@ -206,4 +264,4 @@
     rest: RestFactory
   };
 
-})( this, this.Rekord, this.Firebase );
+})( this, this.Rekord, this.Firebase || this.firebase );
