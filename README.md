@@ -57,5 +57,28 @@ var Item = Rekord({
     return fire.ref( database.name );
   }
 });
+```
 
+### Querying Example
+
+```javascript
+// API REMINDER: Task.search( url, options, data, run? )
+
+// Querying by passing an object where the keys are functions to execute on
+// the query and the values are the argument to pass to the function.
+var queryObject = {
+  orderByChild: 'name',
+  limitToFirst: 10
+};
+var search = Task.search( 'task', {} , queryObject, true );
+search.$results; // 0-10 tasks ordered by name
+
+// Querying by passing a function which is given a Firebase query object which
+// you can call its functions as you desire.
+var queryFunction = function(query) {
+  query.orderByChild('name');
+  query.limitToLast(10);
+};
+var customSearch = Task.search( 'task', {}, queryFunction, true );
+customSearch.$results; // 0-10 tasks ordered by name (descending order)
 ```
