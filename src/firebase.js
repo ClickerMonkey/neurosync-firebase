@@ -64,7 +64,7 @@
     function getQueryFirebase(url)
     {
       return database.getQueryFirebase ? database.getQueryFirebase( url ) :
-        ( isString( url ) ? firebase.database().ref( url ) : getFirebase() );
+        ( isString( url ) ? getFirebase().root.child( url ) : getFirebase() );
     }
 
     function createOperationCallbackSuccess(success)
