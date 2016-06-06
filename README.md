@@ -22,7 +22,7 @@ var fire = firebase.database();
 // implementations are added. It's good to prepare your database in this
 // function so if you switch backends there's only one place you need to do so.
 // You can also pass a prepare function as a Rekord option.
-Rekord.Database.Defaults.prepare = function(db, options) {
+Rekord.Defaults.prepare = function(db, options) {
   db.api = options.api || fire.ref( options.name );
 };
 
