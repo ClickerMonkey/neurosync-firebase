@@ -1,3 +1,4 @@
+/* rekord-firebase 1.4.0 - A rekord binding to firebase - implementing Rekord.rest & Rekord.live by Philip Diffenderfer */
 (function(global, Rekord, firebase, undefined)
 {
   var isObject = Rekord.isObject;
@@ -61,9 +62,9 @@
       return database.getFirebase ? database.getFirebase( model, database ) : database.api;
     }
 
-    function getQueryFirebase(url)
+    function getQueryFirebase(url, data)
     {
-      return database.getQueryFirebase ? database.getQueryFirebase( url ) :
+      return database.getQueryFirebase ? database.getQueryFirebase( url, data ) :
         ( isString( url ) ? getFirebase().root.child( url ) : getFirebase() );
     }
 
@@ -220,7 +221,7 @@
           return failure( [], 0 );
         }
 
-        var query = getQueryFirebase( url );
+        var query = getQueryFirebase( url, data );
 
         if ( isObject( data ) )
         {
