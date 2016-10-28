@@ -1,9 +1,10 @@
 {
   "name": "rekord-firebase",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A rekord binding to firebase - implementing Rekord.rest & Rekord.live",
   "author": "Philip Diffenderfer",
   "license": "MIT",
+  "main": "build/rekord-firebase.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/Rekord/rekord-firebase.git"

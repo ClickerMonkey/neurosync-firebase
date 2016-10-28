@@ -1,4 +1,4 @@
-/* rekord-firebase 1.4.0 - A rekord binding to firebase - implementing Rekord.rest & Rekord.live by Philip Diffenderfer */
+/* rekord-firebase 1.4.1 - A rekord binding to firebase - implementing Rekord.rest & Rekord.live by Philip Diffenderfer */
 (function(global, Rekord, firebase, undefined)
 {
   var isObject = Rekord.isObject;
