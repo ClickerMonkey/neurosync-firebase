@@ -1,11 +1,11 @@
-/* rekord-firebase 1.4.2 - A rekord binding to firebase - implementing Rekord.rest & Rekord.live by Philip Diffenderfer */
+/* rekord-firebase 1.4.3 - A rekord binding to firebase - implementing Rekord.rest & Rekord.live by Philip Diffenderfer */
 // UMD (Universal Module Definition)
 (function (root, factory)
 {
   if (typeof define === 'function' && define.amd) // jshint ignore:line
   {
     // AMD. Register as an anonymous module.
-    define(['Rekord', 'firebase'], function(Rekord, firebase) { // jshint ignore:line
+    define(['rekord', 'firebase'], function(Rekord, firebase) { // jshint ignore:line
       return factory(root, Rekord, firebase);
     });
   }
@@ -14,7 +14,7 @@
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
-    module.exports = factory(global, require('Rekord'), require('firebase'));  // jshint ignore:line
+    module.exports = factory(global, require('rekord'), require('firebase'));  // jshint ignore:line
   }
   else
   {
