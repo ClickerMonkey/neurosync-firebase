@@ -18,7 +18,11 @@ var build = {
   minified: 'rekord-firebase.min.js',
   output: './build/',
   include: [
-    './src/firebase.js'
+    './src/header.js',
+    './src/functions.js',
+    './src/Rest.js',
+    './src/Live.js',
+    './src/footer.js'
   ]
 };
 
