@@ -1,4 +1,4 @@
-/* rekord-firebase 1.5.0 - A rekord binding to firebase - implementing Rekord.rest & Rekord.live by Philip Diffenderfer */
+/* rekord-firebase 1.5.6 - A rekord binding to firebase - implementing Rekord.rest & Rekord.live by Philip Diffenderfer */
 // UMD (Universal Module Definition)
 (function (root, factory)
 {
@@ -314,8 +314,10 @@ Live.prototype =
     return new Live( database );
   }
 
+  Rekord.Lives.Firebase = LiveFactory;
   Rekord.setLive( LiveFactory );
 
+  Rekord.Rests.Firebase = RestFactory;
   Rekord.setRest( RestFactory );
 
   Rekord.Firebase = {

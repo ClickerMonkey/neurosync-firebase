@@ -14,8 +14,10 @@
     return new Live( database );
   }
 
+  Rekord.Lives.Firebase = LiveFactory;
   Rekord.setLive( LiveFactory );
 
+  Rekord.Rests.Firebase = RestFactory;
   Rekord.setRest( RestFactory );
 
   Rekord.Firebase = {
